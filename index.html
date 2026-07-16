@@ -1,279 +1,144 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>毕业典礼视频点播</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>毕业典礼视频入口</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* 全局重置，纯白背景 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #f5f7fa;
-            color: #1e293b;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        h1 {
-            text-align: center;
-            margin: 20px 0 30px;
-            font-weight: 600;
-            font-size: 2rem;
-            color: #0f172a;
-            border-bottom: 3px solid #3b82f6;
-            padding-bottom: 15px;
-            display: inline-block;
-        }
-        .header { text-align: center; }
-        .video-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
-            margin-top: 20px;
-        }
-        @media (min-width: 768px) {
-            .video-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        .video-card {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            overflow: hidden;
-            transition: transform 0.2s ease;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-        }
-        .video-card:hover { transform: translateY(-4px); }
-        .video-container {
-            position: relative;
-            background: #000;
-            aspect-ratio: 16 / 9;
-            display: flex;
             align-items: center;
             justify-content: center;
+            background-color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            padding: 20px;
         }
-        .video-container video {
+        .container {
+            text-align: center;
+            max-width: 600px;
             width: 100%;
-            height: 100%;
-            display: block;
-            background: #000;
         }
-        .video-container .loading-placeholder {
-            position: absolute;
-            color: #94a3b8;
-            font-size: 0.9rem;
-            pointer-events: none;
-            text-align: center;
-        }
-        .video-info {
-            padding: 16px 20px 20px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .video-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #0f172a;
-        }
-        .video-meta {
-            font-size: 0.85rem;
-            color: #64748b;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .video-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 4px;
-        }
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 0.85rem;
+        /* 状态显示区 – 点击即可编辑 */
+        .status {
+            font-size: 2rem;
             font-weight: 500;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            transition: background 0.2s, opacity 0.2s;
-            background: #f1f5f9;
-            color: #1e293b;
-        }
-        .btn-primary { background: #3b82f6; color: white; }
-        .btn-primary:hover { background: #2563eb; }
-        .btn-success { background: #22c55e; color: white; }
-        .btn-success:hover { background: #16a34a; }
-        .btn-outline { background: transparent; border: 1.5px solid #cbd5e1; }
-        .btn-outline:hover { background: #f1f5f9; }
-        .footer {
-            text-align: center;
-            margin-top: 50px;
-            padding: 20px;
-            color: #94a3b8;
-            font-size: 0.85rem;
-            border-top: 1px solid #e2e8f0;
-        }
-        .p2p-status {
+            padding: 12px 30px;
+            border: 2px dashed #d0d0d0;
+            border-radius: 12px;
             display: inline-block;
-            background: #dcfce7;
-            color: #166534;
-            padding: 4px 14px;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            font-weight: 500;
+            cursor: text;
+            transition: border-color 0.3s, background 0.2s;
+            background-color: #fafafa;
+            min-width: 160px;
+            color: #1a1a1a;
         }
-        .notice {
-            background: #fef9c3;
-            border-left: 4px solid #eab308;
-            padding: 12px 18px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            font-size: 0.9rem;
-            color: #854d0e;
+        .status:hover {
+            border-color: #999;
+        }
+        .status:focus {
+            outline: none;
+            border-color: #007aff;
+            background-color: #f0f7ff;
+        }
+        .edit-hint {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-top: 6px;
+            margin-bottom: 30px;
+        }
+        /* 大按钮 */
+        .btn {
+            display: inline-block;
+            margin: 10px 0 30px;
+            padding: 18px 56px;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #007aff;
+            border: none;
+            border-radius: 60px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.25s, transform 0.1s;
+            box-shadow: 0 6px 18px rgba(0, 122, 255, 0.35);
+        }
+        .btn:hover {
+            background-color: #005bbf;
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        /* 提醒区域 */
+        .reminder {
+            font-size: 1.05rem;
+            color: #444;
+            line-height: 1.8;
+            border-top: 1px solid #eaeaea;
+            padding-top: 28px;
+            width: 100%;
+        }
+        .reminder strong {
+            color: #1a1a1a;
+        }
+        .reminder .highlight {
+            background: #fff3cd;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>🎓 毕业典礼视频点播</h1>
-    <p style="color: #64748b; margin-bottom: 10px;">点击播放，在线观看 · 人数越多越流畅</p>
-</div>
+<div class="container">
+    <!-- 服务器状态：点击文字可直接编辑修改 -->
+    <div class="status" contenteditable="true" id="statusText">🟢 服务器运行中</div>
+    <div class="edit-hint">👆 点击状态文字可手动更改</div>
 
-<div class="notice">
-    ⚡ <strong>P2P 加速已启用</strong> · 观看人数越多，加载速度越快！首次加载可能需要等待片刻建立连接。
-</div>
+    <!-- 进入按钮：跳转到视频子域名 -->
+    <a href="https://video.aprs.dpdns.org" class="btn" target="_blank">🎬 进入视频中心</a>
 
-<div class="video-grid" id="videoGrid">
-
-    <!-- ============================================================ -->
-    <!-- 视频卡片 1：请根据你的视频修改下方内容                        -->
-    <!-- ============================================================ -->
-
-    <div class="video-card" data-video-id="video1">
-        <div class="video-container">
-            <!-- 
-                ★★★ 重要：将 src 替换为你自己的磁力链接 ★★★
-                磁力链接可以从 BT 客户端（如 qBittorrent、WebTorrent）生成
-            -->
-            <video 
-                id="player-video1"
-                class="webtor"
-                src="magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel"
-                poster="https://via.placeholder.com/640x360/1e293b/ffffff?text=毕业典礼"
-                controls
-                playsinline
-                preload="metadata"
-                width="100%"
-                data-title="毕业典礼精彩回顾"
-            >
-                您的浏览器不支持 HTML5 视频播放。
-            </video>
-            <div class="loading-placeholder" id="placeholder-video1">⏳ 正在连接 P2P 网络...</div>
-        </div>
-        <div class="video-info">
-            <div class="video-title">🎬 毕业典礼精彩回顾</div>
-            <div class="video-meta">
-                <span>📁 格式: MP4</span>
-                <span>👥 <span class="p2p-status">P2P 已启用</span></span>
-            </div>
-            <div class="video-actions">
-                <!-- 
-                    ★★★ 下载链接：将 href 替换为 video 子域名下的视频文件直链 ★★★
-                    格式：https://video.xxx.dpdns.org/你的视频文件名.mp4
-                -->
-                <a href="https://video.xxx.dpdns.org/chfs/shared/南京外国语学校2023级初中毕业典礼（线上宣发版本）.mp4" class="btn btn-primary" download>⬇️ 下载视频</a>
-                <!-- 复制磁力链接的按钮 -->
-                <button class="btn btn-outline" onclick="copyMagnet('magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel')">📋 复制磁力链接</button>
-            </div>
-        </div>
+    <!-- 重要提醒 -->
+    <div class="reminder">
+        <strong>📢 重要提醒</strong><br />
+        服务器开放时间：<span class="highlight">2026年7月17日 — 7月20日</span><br />
+        （后期可能延长，请大家尽快下载）
     </div>
-
-    <!-- ============================================================ -->
-    <!-- 如需添加更多视频，复制上方卡片并修改磁力链接和标题即可        -->
-    <!-- ============================================================ -->
-
 </div>
-
-<div class="footer">
-    💡 提示：视频通过 P2P 网络分发，观看人数越多速度越快 · 所有数据在浏览器间直接传输
-</div>
-
-<!-- ============================================================ -->
-<!-- 加载 WebTorrent SDK，实现 P2P 播放                             -->
-<!-- ============================================================ -->
-<script src="https://cdn.jsdelivr.net/npm/@webtor/embed-sdk-js@0.2.19/dist/index.min.js" charset="utf-8" async></script>
 
 <script>
     (function() {
-        'use strict';
+        const statusEl = document.getElementById('statusText');
 
-        window.copyMagnet = function(magnetLink) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(magnetLink).then(() => {
-                    alert('✅ 磁力链接已复制！可以用 BT 客户端打开下载。');
-                }).catch(() => {
-                    fallbackCopy(magnetLink);
-                });
-            } else {
-                fallbackCopy(magnetLink);
+        // 当用户修改状态后，自动保存到 localStorage，刷新页面后恢复
+        statusEl.addEventListener('blur', function() {
+            const val = this.innerText.trim();
+            if (val) {
+                localStorage.setItem('serverStatus', val);
             }
-        };
+        });
 
-        function fallbackCopy(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                alert('✅ 磁力链接已复制！');
-            } catch (err) {
-                alert('❌ 复制失败，请手动复制链接：\n' + text);
+        // 页面加载时恢复之前保存的状态
+        const saved = localStorage.getItem('serverStatus');
+        if (saved) {
+            statusEl.innerText = saved;
+        }
+
+        // 按回车键时自动失焦（避免换行）
+        statusEl.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.blur();
             }
-            document.body.removeChild(textarea);
-        }
-
-        function initWebtor() {
-            if (typeof window.webtor !== 'undefined' && Array.isArray(window.webtor)) {
-                hideAllPlaceholders();
-                return;
-            }
-
-            let checkInterval = setInterval(function() {
-                if (typeof window.webtor !== 'undefined' && Array.isArray(window.webtor)) {
-                    clearInterval(checkInterval);
-                    hideAllPlaceholders();
-                }
-            }, 300);
-
-            setTimeout(function() {
-                clearInterval(checkInterval);
-                hideAllPlaceholders();
-            }, 10000);
-        }
-
-        function hideAllPlaceholders() {
-            document.querySelectorAll('.loading-placeholder').forEach(function(el) {
-                el.style.display = 'none';
-            });
-        }
-
-        if (document.readyState === 'complete' || document.readyState === 'interactive') {
-            initWebtor();
-        } else {
-            document.addEventListener('DOMContentLoaded', initWebtor);
-        }
-
-        console.log('🎓 毕业典礼视频页面已加载，P2P 加速由 WebTorrent 驱动。');
+        });
     })();
 </script>
 
