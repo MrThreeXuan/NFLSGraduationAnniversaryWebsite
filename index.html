@@ -26,7 +26,7 @@
             max-width: 600px;
             width: 100%;
         }
-        /* 状态显示区 – 点击即可编辑 */
+        /* 状态显示区 – 纯静态 */
         .status {
             font-size: 2rem;
             font-weight: 500;
@@ -34,24 +34,8 @@
             border: 2px dashed #d0d0d0;
             border-radius: 12px;
             display: inline-block;
-            cursor: text;
-            transition: border-color 0.3s, background 0.2s;
             background-color: #fafafa;
-            min-width: 160px;
             color: #1a1a1a;
-        }
-        .status:hover {
-            border-color: #999;
-        }
-        .status:focus {
-            outline: none;
-            border-color: #007aff;
-            background-color: #f0f7ff;
-        }
-        .edit-hint {
-            font-size: 0.8rem;
-            color: #aaa;
-            margin-top: 6px;
             margin-bottom: 30px;
         }
         /* 大按钮 */
@@ -99,48 +83,19 @@
 <body>
 
 <div class="container">
-    <!-- 服务器状态：点击文字可直接编辑修改 -->
-    <div class="status" contenteditable="true" id="statusText">🟢 服务器运行中</div>
-    <div class="edit-hint">👆 点击状态文字可手动更改</div>
+    <!-- 服务器状态：直接写死在 HTML 中 -->
+    <div class="status">🟢服务器正常运行</div>
 
-    <!-- 进入按钮：跳转到视频子域名 -->
-    <a href="https://video.aprs.dpdns.org" class="btn" target="_blank">🎬 进入视频中心</a>
+    <!-- 进入按钮：跳转到视频子域名，文字已修改 -->
+    <a href="https://video.aprs.dpdns.org" class="btn" target="_blank">🎬 进入视频文件页</a>
 
-    <!-- 重要提醒 -->
+    <!-- 重要提醒（内容不变） -->
     <div class="reminder">
         <strong>📢 重要提醒</strong><br />
         服务器开放时间：<span class="highlight">2026年7月17日 — 7月20日</span><br />
         （后期可能延长，请大家尽快下载）
     </div>
 </div>
-
-<script>
-    (function() {
-        const statusEl = document.getElementById('statusText');
-
-        // 当用户修改状态后，自动保存到 localStorage，刷新页面后恢复
-        statusEl.addEventListener('blur', function() {
-            const val = this.innerText.trim();
-            if (val) {
-                localStorage.setItem('serverStatus', val);
-            }
-        });
-
-        // 页面加载时恢复之前保存的状态
-        const saved = localStorage.getItem('serverStatus');
-        if (saved) {
-            statusEl.innerText = saved;
-        }
-
-        // 按回车键时自动失焦（避免换行）
-        statusEl.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                this.blur();
-            }
-        });
-    })();
-</script>
 
 </body>
 </html>
